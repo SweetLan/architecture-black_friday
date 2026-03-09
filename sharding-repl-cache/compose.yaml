@@ -1,4 +1,4 @@
-name: mongo-sharding-repl
+name: sharding-repl-cache
 
 services:
   configSrv:
@@ -84,10 +84,19 @@ services:
     container_name: pymongo-api
     depends_on:
       - mongos_router
+      - redis
     ports:
-      - 8080:8080"
+      - "8080:8080"
     environment:
-      MONGO_URI: mongodb://mongos_router:27017/
+      MONGODB_URL: mongodb://mongos_router:27017/
+      MONGODB_DATABASE_NAME: somedb
+      REDIS_URL: "redis://redis:6379"
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
 
 volumes:
   configsrv_data:
